@@ -1,11 +1,26 @@
 #include<iostream>
 #include<queue>
+#include<vector>
 
 namespace
 {
 	std::priority_queue<int, std::vector<int>, std::greater<int>> myQueue;// 小さい順に取り出す優先順位付きキュー
 	std::queue<int> ituQueue;// FIFOキュー
 }
+
+//BFSに使う構造体
+struct Node 
+{
+	int cost;
+};
+
+//優先順位をつける
+bool operator>(const Node& a, const Node& b)
+{
+	return a.cost > b.cost;
+}
+
+
 
 int main() 
 {
@@ -40,5 +55,51 @@ int main()
 
 	}
 
+	//ここから下にBFSを書く
+
+	const int N = 5;// ノードの数
+
+	//段階のカウンター
+	int neighbors[N][3] = 
+	{
+		   {1, 2, -1},
+		   {0, 3, -1},
+		   {0, 3, -1},
+		   {1, 2, 4},
+		   {3, -1, -1}
+	};
+
+	bool visited[N] = { false, false, false, false, false };//通ったかを記録する配列
+	std::queue<int> q;
+
+	int start = 0;
+	visited[start] = true;//上のvisitedを開始する
+	q.push(start);
+
+	//BFSのループ
+	while (!q.empty())
+	{
+		int cur = q.front(); q.pop();
+		std::cout << "BFS: " << cur << std::endl;
+
+		//カウンターを回す
+		for (int i = 0; i < 3; ++i)
+		{
+			int nxt = neighbors[cur][i];
+			if (nxt == -1) break;
+			if (!visited[nxt])
+			{
+				visited[nxt] = true;
+				q.push(nxt);
+			}
+		}
+	}
 	return 0;
 }
+
+
+
+
+
+
+
